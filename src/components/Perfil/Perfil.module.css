@@ -1,0 +1,21 @@
+.header{
+    background-color: var(--corPrincipal);
+    display: flex;
+    flex-direction: column;
+    color: var(--corSecundaria);
+    align-items: center;
+    padding: 100px 0 50px;
+    margin-bottom: 50px;
+}
+
+.avatar{
+    width: 160px;
+    width: 160px;
+    border-radius: 50%;
+    border: 2px solid var(--corSecundaria);;
+}
+
+.userName{
+    font-size: 18px;
+    color: var(--corSecundaria);
+}
