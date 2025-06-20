@@ -7,13 +7,23 @@ export default ({ nomeUsuario }) => {
     const [repositorios, setRepositorios] = useState([]);
     const [estaCarregando, setEstaCarregando] = useState(true);
     const [deuErro, setDeuErro] = useState(false);
+    const [mensagemErro, setMensagemErro] = useState('');
 
     useEffect(() => {
+
+        setEstaCarregando(true);
+        setDeuErro(false);
+        setMensagemErro('');
+        setRepositorios([]);
+
         fetch(`https://api.github.com/users/${nomeUsuario}/repos`)
-            .then(resposta => {
-                if(resposta.status !== 200)
-                    {
-                    throw new Error('Erro na resposta da API');
+            .then(async resposta => {
+                if (resposta.status !== 200) {
+
+                    const erro = await resposta.json();
+                    console.log(erro);
+                    throw new Error(erro.message || 'Erro ao carregar');
+
                 }
                 return resposta.json();
 
@@ -23,7 +33,9 @@ export default ({ nomeUsuario }) => {
                     setEstaCarregando(false);
                 }, 3000)
                 // console.log(respostaJSON);
-            }).catch(() => {
+            }).catch(e => {
+                // console.error('Ocorreu um erro:', e);
+                setMensagemErro(e.message);
                 setDeuErro(true);
                 setEstaCarregando(false);
             });
@@ -34,7 +46,13 @@ export default ({ nomeUsuario }) => {
     }
 
     if (deuErro) {
-        return <h2 style={{ color: 'red' }}>Erro ao carregar os repositórios 😢</h2>;
+
+        return <>
+            <h2 style={{ color: 'red' }}>Erro ao carregar os repositórios 😢 </h2>
+            <br />
+            <br />
+            {mensagemErro};
+        </>
     }
 
     return (
